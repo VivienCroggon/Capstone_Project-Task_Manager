@@ -172,33 +172,31 @@ def view_all():
         disp_str += f"Task Description: \n {t['description']}\n"
         print(disp_str)
 
-def task_view():
-    task_num = 0
-    for t in task_list:
-        if t['username'] == curr_user:
-            task_num += 1
-            disp_str = f"{border}\n"
-            disp_str += f"Task Number: \t {task_num}\n"
-            disp_str += f"{border}\n"
-            disp_str += f"Task: \t\t {t['title']}\n"
-            disp_str += f"Assigned to: \t {t['username']}\n"
-            disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-            disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-            disp_str += f"Task Description: \n {t['description']}\n"
-            print(disp_str)
-    print(border)
+# def task_view():
+    # task_num = 0
+    # for t in task_list:
+    #     if t['username'] == curr_user:
+    #         task_num += 1
+    #         disp_str = f"{border}\n"
+    #         disp_str += f"Task Number: \t {task_num}\n"
+    #         disp_str += f"{border}\n"
+    #         disp_str += f"Task: \t\t {t['title']}\n"
+    #         disp_str += f"Assigned to: \t {t['username']}\n"
+    #         disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+    #         disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+    #         disp_str += f"Task Description: \n {t['description']}\n"
+    #         print(disp_str)
+
+    # print(border)
 
 def view_mine():
     '''Reads the task from task.txt file and prints to the console in the 
         format of Output 2 presented in the task pdf (i.e. includes spacing
         and labelling)
     '''
-    task_num = 0
     for i, t in enumerate(task_list):
-        if t['username'] == curr_user:
-            # task_view()
+        if t['username'] == curr_user and t['completed'] is False:
             t_index = i
-            # task_num += 1
             disp_str = f"Task Number: \t {t_index}\n"
             disp_str += f"Task: \t\t {t['title']}\n"
             disp_str += f"Assigned to: \t {t['username']}\n"
