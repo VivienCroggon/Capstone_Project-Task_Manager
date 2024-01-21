@@ -20,7 +20,7 @@ with open("tasks.txt", 'r') as task_file:
     task_data = task_file.read().split("\n")
     task_data = [t for t in task_data if t != ""]
 
-
+border = "-"*50
 task_list = []
 for t_str in task_data:
     curr_t = {}
@@ -36,7 +36,8 @@ for t_str in task_data:
 
     task_list.append(curr_t)
 
-
+# print(task_list)
+# print(curr_t)
 #====Login Section====
 '''This code reads usernames and password from the user.txt file to 
     allow a user to login.
@@ -171,19 +172,66 @@ def view_all():
         disp_str += f"Task Description: \n {t['description']}\n"
         print(disp_str)
 
-def view_mine():
-    '''Reads the task from task.txt file and prints to the console in the 
-        format of Output 2 presented in the task pdf (i.e. includes spacing
-        and labelling)
-    '''
+def task_view():
+    task_num = 0
     for t in task_list:
         if t['username'] == curr_user:
-            disp_str = f"Task: \t\t {t['title']}\n"
+            task_num += 1
+            disp_str = f"{border}\n"
+            disp_str += f"Task Number: \t {task_num}\n"
+            disp_str += f"{border}\n"
+            disp_str += f"Task: \t\t {t['title']}\n"
             disp_str += f"Assigned to: \t {t['username']}\n"
             disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
             disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
             disp_str += f"Task Description: \n {t['description']}\n"
             print(disp_str)
+    print(border)
+
+def view_mine():
+    '''Reads the task from task.txt file and prints to the console in the 
+        format of Output 2 presented in the task pdf (i.e. includes spacing
+        and labelling)
+    '''
+    task_num = 0
+    for i, t in enumerate(task_list):
+        if t['username'] == curr_user:
+            # task_view()
+            t_index = i
+            # task_num += 1
+            disp_str = f"Task Number: \t {t_index}\n"
+            disp_str += f"Task: \t\t {t['title']}\n"
+            disp_str += f"Assigned to: \t {t['username']}\n"
+            disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+            disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
+            disp_str += f"Task Description: \n {t['description']}\n"
+            print(disp_str)
+    # task_view()
+    edit_task = input(f"Please enter Task Number of task you would like to edit, or -1 to return to main menu: ")
+    if edit_task.isnumeric():
+        edit_task = int(edit_task)
+
+        if edit_task in range(len(task_list)):
+            edit_choice = input("To mark task complete, enter: y\nTo edit task, enter: e\n")
+
+            if edit_choice.lower() == "y":
+                task_list[t_index]['completed'] = True
+                print(task_list[t_index]['completed'])
+            elif edit_choice.lower() == "e":
+                while True:
+                    new_user = input("Please enter user you would like to assign this task to: ")
+                    if new_user not in username_password.keys():
+                        print("User not recognised")
+                    else:
+                        # print(task_list[edit_task]['username'])
+                        task_list[edit_task]['username'] = new_user
+                        print(task_list[edit_task]['username'])
+                        break
+                    
+        # elif edit_task == -1:
+
+
+
 
 while True:
     # presenting the menu to the user and 
