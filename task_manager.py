@@ -75,29 +75,33 @@ while not logged_in:
 def reg_user():
     '''Add a new user to the user.txt file'''
     # - Request input of a new username
-    new_username = input("New Username: ")
+    while True:
+        new_username = input("New Username: ")
+        if new_username not in username_password:
+            # - Request input of a new password
+            new_password = input("New Password: ")
 
-    # - Request input of a new password
-    new_password = input("New Password: ")
+            # - Request input of password confirmation.
+            confirm_password = input("Confirm Password: ")
 
-    # - Request input of password confirmation.
-    confirm_password = input("Confirm Password: ")
+            # - Check if the new password and confirmed password are the same.
+            if new_password == confirm_password:
+                # - If they are the same, add them to the user.txt file,
+                print("New user added")
+                username_password[new_username] = new_password
+                
+                with open("user.txt", "w") as out_file:
+                    user_data = []
+                    for k in username_password:
+                        user_data.append(f"{k};{username_password[k]}")
+                    out_file.write("\n".join(user_data))
 
-    # - Check if the new password and confirmed password are the same.
-    if new_password == confirm_password:
-        # - If they are the same, add them to the user.txt file,
-        print("New user added")
-        username_password[new_username] = new_password
-        
-        with open("user.txt", "w") as out_file:
-            user_data = []
-            for k in username_password:
-                user_data.append(f"{k};{username_password[k]}")
-            out_file.write("\n".join(user_data))
-
-    # - Otherwise you present a relevant message.
-    else:
-        print("Passwords do no match")
+            # - Otherwise you present a relevant message.
+            else:
+                print("Passwords do no match")
+            break
+        else:
+             print("Invalid - Username already in use.")
 
 def add_task():
     '''Allow a user to add a new task to task.txt file
