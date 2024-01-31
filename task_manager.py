@@ -172,22 +172,6 @@ def view_all():
         disp_str += f"Task Description: \n {t['description']}\n"
         print(disp_str)
 
-# def task_view():
-    # task_num = 0
-    # for t in task_list:
-    #     if t['username'] == curr_user:
-    #         task_num += 1
-    #         disp_str = f"{border}\n"
-    #         disp_str += f"Task Number: \t {task_num}\n"
-    #         disp_str += f"{border}\n"
-    #         disp_str += f"Task: \t\t {t['title']}\n"
-    #         disp_str += f"Assigned to: \t {t['username']}\n"
-    #         disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-    #         disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
-    #         disp_str += f"Task Description: \n {t['description']}\n"
-    #         print(disp_str)
-
-    # print(border)
 
 def view_mine():
     '''Reads the task from task.txt file and prints to the console in the 
@@ -204,29 +188,37 @@ def view_mine():
             disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
             disp_str += f"Task Description: \n {t['description']}\n"
             print(disp_str)
-    # task_view()
-    edit_task = input(f"Please enter Task Number of task you would like to edit, or -1 to return to main menu: ")
-    if edit_task.isnumeric():
-        edit_task = int(edit_task)
+        
+    edit_a_task(t_index)
 
-        if edit_task in range(len(task_list)):
-            edit_choice = input("To mark task complete, enter: y\nTo edit task, enter: e\n")
 
-            if edit_choice.lower() == "y":
-                task_list[t_index]['completed'] = True
-                print(task_list[t_index]['completed'])
-            elif edit_choice.lower() == "e":
-                while True:
-                    new_user = input("Please enter user you would like to assign this task to: ")
-                    if new_user not in username_password.keys():
-                        print("User not recognised")
-                    else:
-                        # print(task_list[edit_task]['username'])
-                        task_list[edit_task]['username'] = new_user
-                        print(task_list[edit_task]['username'])
-                        break
-                    
-        # elif edit_task == -1:
+def edit_a_task(t_index):
+    while True:
+        edit_task = input("Please enter Task Number of task you would like to edit, or -1 to return to main menu: ")
+        if edit_task.isnumeric():
+            edit_task = int(edit_task)
+
+            if edit_task in range(len(task_list)):
+                edit_choice = input("To mark task complete, enter: y\nTo edit task, enter: e\n")
+
+                # Update task_list dictionary value
+                if edit_choice.lower() == "y":
+                    task_list[t_index]['completed'] = "Yes"
+                    # print(task_list[t_index])
+                elif edit_choice.lower() == "e":
+                    while True:
+                        new_user = input("Please enter user you would like to assign this task to: ")
+                        if new_user not in username_password.keys():
+                            print("User not recognised")
+                        else:
+                            # print(task_list[edit_task]['username'])
+                            task_list[edit_task]['username'] = new_user
+                            print(task_list[edit_task]['username'])
+                            break
+        elif edit_task == "-1":
+            break
+        else:
+            print("Invalid input!")                
 
 
 
