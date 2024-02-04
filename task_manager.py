@@ -170,6 +170,7 @@ def view_all():
         disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
         disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
         disp_str += f"Task Description: \n {t['description']}\n"
+        disp_str += f"Task Completed: \t{t['completed']}\n\n"
         print(disp_str)
 
 
@@ -178,33 +179,41 @@ def view_mine():
         format of Output 2 presented in the task pdf (i.e. includes spacing
         and labelling)
     '''
-    for i, t in enumerate(task_list):
+    view_mine_tasks = []
+    for t_index, t in enumerate(task_list):
         if t['username'] == curr_user and t['completed'] is False:
-            t_index = i
             disp_str = f"Task Number: \t {t_index}\n"
             disp_str += f"Task: \t\t {t['title']}\n"
             disp_str += f"Assigned to: \t {t['username']}\n"
             disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
             disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
             disp_str += f"Task Description: \n {t['description']}\n"
+            view_mine_tasks.append(task_list[t_index])
             print(disp_str)
-        
-    edit_a_task(t_index)
+
+ 
+    edit_tasks(view_mine_tasks)
 
 
-def edit_a_task(t_index):
-    while True:
-        edit_task = input("Please enter Task Number of task you would like to edit, or -1 to return to main menu: ")
-        if edit_task.isnumeric():
-            edit_task = int(edit_task)
+def edit_tasks(view_mine_tasks):
+    '''Allows user to edit their tasks. Tasks list created in view_mine() as argument
+    '''
+
+    if view_mine_tasks:
+        while True:
+
+            # User makes their selections
+            edit_task = input("Please enter Task Number of task you would like to edit, or -1 to return to main menu: ")
+            if edit_task.isnumeric():
+                edit_task = int(edit_task)
 
             if edit_task in range(len(task_list)):
                 edit_choice = input("To mark task complete, enter: y\nTo edit task, enter: e\n")
 
                 # Update task_list dictionary value
                 if edit_choice.lower() == "y":
-                    task_list[t_index]['completed'] = "Yes"
-                    # print(task_list[t_index])
+                    task_list[edit_task]['completed'] = "Yes"
+
                 elif edit_choice.lower() == "e":
                     while True:
                         new_user = input("Please enter user you would like to assign this task to: ")
@@ -215,13 +224,57 @@ def edit_a_task(t_index):
                             task_list[edit_task]['username'] = new_user
                             print(task_list[edit_task]['username'])
                             break
-        elif edit_task == "-1":
-            break
-        else:
-            print("Invalid input!")                
+
+            elif edit_task == "-1":
+                break
+            else:
+                print("Invalid input!")
+    else:
+        print("\nNo tasks available!\n")           
 
 
+def generate_results():
 
+    # The total number of tasks that have been generated and tracked using the task_manager.py.
+    total_tasks = len(task_list)
+    print("Total tasks: ", total_tasks)
+
+    # The total number of completed tasks.
+    completed_tasks = 0
+    for i in task_list:
+        if i['completed'] == "Yes":
+            completed_tasks += 1
+    print("Completed tasks: ", completed_tasks)
+
+    # The total number of uncompleted tasks.
+    uncompleted_tasks = total_tasks - completed_tasks
+    print("Uncompleted tasks: ", uncompleted_tasks)
+
+    # The total number of tasks that haven’t been completed and that are overdue.
+    overdue_tasks = 0
+    today = datetime.today()
+    for i in task_list:
+        if i['completed'] != "Yes" and i['due_date'] < today:
+            overdue_tasks += 1
+    print("Overdue tasks: ", overdue_tasks)
+
+    # The percentage of tasks that are incomplete.
+    incomplete_percentage = int((uncompleted_tasks/total_tasks)*100)
+    print("Percentage of incomplete tasks: ", incomplete_percentage, "%")
+
+    # The percentage of tasks that are overdue.
+    overdue_percentage = int((overdue_tasks/total_tasks)*100)
+    print("Percentage of overdue tasks: ", overdue_percentage, "%")
+
+    # Write to text file task_overview.txt to display the results in a user friendly way.
+    with open('task_overview.txt', 'w') as file:
+        file.write(f"Total tasks:  {total_tasks}\n")
+        file.write(f"Completed tasks:  {completed_tasks}\n")
+        file.write(f"Uncompleted tasks:  {uncompleted_tasks}\n")
+        file.write(f"Overdue tasks:  {overdue_tasks}\n")
+        file.write(f"Percentage of uncompleted tasks:  {incomplete_percentage}%\n")
+        file.write(f"Percentage of overdue tasks:  {overdue_percentage}%\n")
+        
 
 while True:
     # presenting the menu to the user and 
@@ -232,6 +285,7 @@ r - Registering a user
 a - Adding a task
 va - View all tasks
 vm - View my task
+gr - Generate reports
 ds - Display statistics
 e - Exit
 : ''').lower()
@@ -247,6 +301,9 @@ e - Exit
 
     elif menu == 'vm':
         view_mine()
+
+    elif menu == 'gr':
+        generate_results()
     
     elif menu == 'ds' and curr_user == 'admin': 
         '''If the user is an admin they can display statistics about number of users
