@@ -20,7 +20,10 @@ with open("tasks.txt", 'r') as task_file:
     task_data = task_file.read().split("\n")
     task_data = [t for t in task_data if t != ""]
 
+
 border = "-"*50
+today = datetime.today()
+
 task_list = []
 for t_str in task_data:
     curr_t = {}
@@ -240,34 +243,34 @@ def generate_results():
 
     # The total number of tasks that have been generated and tracked using the task_manager.py.
     total_tasks = len(task_list)
-    print("Total tasks: ", total_tasks)
+    # print("Total tasks: ", total_tasks)
 
     # The total number of completed tasks.
     completed_tasks = 0
     for i in task_list:
         if i['completed'] == "Yes":
             completed_tasks += 1
-    print("Completed tasks: ", completed_tasks)
+    # print("Completed tasks: ", completed_tasks)
 
     # The total number of uncompleted tasks.
     uncompleted_tasks = total_tasks - completed_tasks
-    print("Uncompleted tasks: ", uncompleted_tasks)
+    # print("Uncompleted tasks: ", uncompleted_tasks)
 
     # The total number of tasks that haven’t been completed and that are overdue.
     overdue_tasks = 0
-    today = datetime.today()
+    # today = datetime.today()
     for i in task_list:
         if i['completed'] != "Yes" and i['due_date'] < today:
             overdue_tasks += 1
-    print("Overdue tasks: ", overdue_tasks)
+    # print("Overdue tasks: ", overdue_tasks)
 
     # The percentage of tasks that are incomplete.
     incomplete_percentage = int((uncompleted_tasks/total_tasks)*100)
-    print("Percentage of incomplete tasks: ", incomplete_percentage, "%")
+    # print("Percentage of incomplete tasks: ", incomplete_percentage, "%")
 
     # The percentage of tasks that are overdue.
     overdue_percentage = int((overdue_tasks/total_tasks)*100)
-    print("Percentage of overdue tasks: ", overdue_percentage, "%")
+    # print("Percentage of overdue tasks: ", overdue_percentage, "%")
 
     # Write to text file task_overview.txt to display the results in a user friendly way.
     with open('task_overview.txt', 'w') as file:
@@ -280,8 +283,63 @@ def generate_results():
         
     # The total number of users registered with task_manager.py.
     users_registered = len(username_password)
-    print("Number of users registered: ", users_registered)
-    print(username_password)
+    # print("Number of users registered: ", users_registered)
+
+    user_stats(curr_user)
+
+
+def user_stats(name):
+
+    # The total number of users registered with task_manager.py.
+    users_registered = len(username_password)
+
+    # The total number of tasks assigned to that user.
+    number_of_tasks = 0
+    if name in username_password:
+        # print(task_list)
+        for i in task_list:
+            if i['username'] == name:
+                number_of_tasks += 1
+        # print("Number of tasks: ", number_of_tasks)
+
+    # The percentage of the total number of tasks that have been assigned to that user
+    total_tasks = len(task_list)
+    user_task_percentage = int((number_of_tasks/total_tasks)*100)
+    # print(f"Percentage of tasks assigned to user: {user_task_percentage}%")
+
+    # The percentage of the tasks assigned to that user that have been completed
+    num_of_completed_tasks = 0
+    for i in task_list:
+            if i['username'] == name and i['completed'] is True:
+                num_of_completed_tasks += 1
+    user_tasks_completed_percentage = int((num_of_completed_tasks/number_of_tasks)*100)
+    # print(f"Percentage of completed tasks assigned to user: {user_tasks_completed_percentage}%")
+
+    # The percentage of the tasks assigned to that user that must still be completed
+    tasks_to_complete_percentage = 100 - user_tasks_completed_percentage
+    # print(f"Percentage of tasks assigned to user to be completed: {tasks_to_complete_percentage}%")
+
+    # The percentage of the tasks assigned to that user that has not yet been completed and are overdue
+    user_overdue_tasks = 0
+    for i in task_list:
+        if i['username'] == name and i['completed'] is False and i['due_date'] < today:
+            user_overdue_tasks += 1
+
+    user_overdue_percentage = int((user_overdue_tasks/number_of_tasks)*100)
+    # print(f"Percentage of tasks assigned to user that are overdue: {user_overdue_percentage}%")
+
+    # Write to text file user_overview.txt to display the results in a user friendly way.
+    with open('user_overview.txt', 'w') as file:
+        file.write(f"Number of users registered: {users_registered}\n")
+        file.write(f"Username: {name}\n")
+        file.write(f"Number of assigned tasks: {number_of_tasks}\n")
+        file.write(f"Percentage of tasks assigned to user: {user_task_percentage}%\n")
+        file.write(f"Percentage of completed assigned tasks: {user_tasks_completed_percentage}%\n")
+        file.write(f"Percentage of uncompleted assigned tasks: {tasks_to_complete_percentage}%\n")
+        file.write(f"Percentage of overdue uncompleted assigned tasks: {user_overdue_percentage}%\n")
+
+
+
 
 while True:
     # presenting the menu to the user and 
