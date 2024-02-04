@@ -38,6 +38,7 @@ for t_str in task_data:
 
 # print(task_list)
 # print(curr_t)
+
 #====Login Section====
 '''This code reads usernames and password from the user.txt file to 
     allow a user to login.
@@ -78,7 +79,7 @@ def reg_user():
     # - Request input of a new username
     while True:
         new_username = input("New Username: ")
-        if new_username not in username_password:
+        if new_username.lower() not in username_password:
             # - Request input of a new password
             new_password = input("New Password: ")
 
@@ -101,6 +102,7 @@ def reg_user():
             else:
                 print("Passwords do no match")
             break
+
         else:
              print("Invalid - Username already in use.")
 
@@ -157,6 +159,7 @@ def add_task():
             task_list_to_write.append(";".join(str_attrs))
         task_file.write("\n".join(task_list_to_write))
     print("Task successfully added.")
+
 
 def view_all():
     '''Reads the task from task.txt file and prints to the console in the 
@@ -275,6 +278,10 @@ def generate_results():
         file.write(f"Percentage of uncompleted tasks:  {incomplete_percentage}%\n")
         file.write(f"Percentage of overdue tasks:  {overdue_percentage}%\n")
         
+    # The total number of users registered with task_manager.py.
+    users_registered = len(username_password)
+    print("Number of users registered: ", users_registered)
+    print(username_password)
 
 while True:
     # presenting the menu to the user and 
