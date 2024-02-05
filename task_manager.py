@@ -11,76 +11,12 @@ from datetime import datetime, date
 
 DATETIME_STRING_FORMAT = "%Y-%m-%d"
 
-# Create tasks.txt if it doesn't exist
-if not os.path.exists("tasks.txt"):
-    with open("tasks.txt", "w") as default_file:
-        pass
-
-with open("tasks.txt", 'r') as task_file:
-    task_data = task_file.read().split("\n")
-    task_data = [t for t in task_data if t != ""]
-
-
-border = "-"*50
-today = datetime.today()
-
-task_list = []
-for t_str in task_data:
-    curr_t = {}
-
-    # Split by semicolon and manually add each component
-    task_components = t_str.split(";")
-    curr_t['username'] = task_components[0]
-    curr_t['title'] = task_components[1]
-    curr_t['description'] = task_components[2]
-    curr_t['due_date'] = datetime.strptime(task_components[3], DATETIME_STRING_FORMAT)
-    curr_t['assigned_date'] = datetime.strptime(task_components[4], DATETIME_STRING_FORMAT)
-    curr_t['completed'] = True if task_components[5] == "Yes" else False
-
-    task_list.append(curr_t)
-
-# print(task_list)
-# print(curr_t)
-
-#====Login Section====
-'''This code reads usernames and password from the user.txt file to 
-    allow a user to login.
-'''
-# If no user.txt file, write one with a default account
-if not os.path.exists("user.txt"):
-    with open("user.txt", "w") as default_file:
-        default_file.write("admin;password")
-
-# Read in user_data
-with open("user.txt", 'r') as user_file:
-    user_data = user_file.read().split("\n")
-
-# Convert to a dictionary
-username_password = {}
-for user in user_data:
-    username, password = user.split(';')
-    username_password[username] = password
-
-logged_in = False
-while not logged_in:
-
-    print("LOGIN")
-    curr_user = input("Username: ")
-    curr_pass = input("Password: ")
-    if curr_user not in username_password.keys():
-        print("User does not exist")
-        continue
-    elif username_password[curr_user] != curr_pass:
-        print("Wrong password")
-        continue
-    else:
-        print("Login Successful!")
-        logged_in = True
-
+# =====Defining required functions=====
 def reg_user():
     '''Add a new user to the user.txt file'''
     # - Request input of a new username
     while True:
+        print(border)
         new_username = input("New Username: ")
         if new_username.lower() not in username_password:
             # - Request input of a new password
@@ -103,11 +39,12 @@ def reg_user():
 
             # - Otherwise you present a relevant message.
             else:
-                print("Passwords do no match")
+                print("\nPasswords do not match.")
             break
 
         else:
-             print("Invalid - Username already in use.")
+             print("\nInvalid - Username already in use.")
+
 
 def add_task():
     '''Allow a user to add a new task to task.txt file
@@ -117,6 +54,7 @@ def add_task():
         - A description of the task and 
         - the due date of the task.'''
     while True:
+        print(border)
         task_username = input("Name of person assigned to task: ")
         if task_username not in username_password.keys():
             print("User does not exist. Please enter a valid username")
@@ -161,7 +99,7 @@ def add_task():
             ]
             task_list_to_write.append(";".join(str_attrs))
         task_file.write("\n".join(task_list_to_write))
-    print("Task successfully added.")
+    print(f"{border}\n\nTask successfully added.")
 
 
 def view_all():
@@ -171,7 +109,8 @@ def view_all():
     '''
 
     for t in task_list:
-        disp_str = f"Task: \t\t {t['title']}\n"
+        disp_str = f"{border}\n\n"
+        disp_str += f"Task: \t\t {t['title']}\n"
         disp_str += f"Assigned to: \t {t['username']}\n"
         disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
         disp_str += f"Due Date: \t {t['due_date'].strftime(DATETIME_STRING_FORMAT)}\n"
@@ -188,7 +127,8 @@ def view_mine():
     view_mine_tasks = []
     for t_index, t in enumerate(task_list):
         if t['username'] == curr_user and t['completed'] is False:
-            disp_str = f"Task Number: \t {t_index}\n"
+            disp_str = f"{border}\n\n"
+            disp_str += f"Task Number: \t {t_index}\n"
             disp_str += f"Task: \t\t {t['title']}\n"
             disp_str += f"Assigned to: \t {t['username']}\n"
             disp_str += f"Date Assigned: \t {t['assigned_date'].strftime(DATETIME_STRING_FORMAT)}\n"
@@ -218,7 +158,7 @@ def edit_tasks(view_mine_tasks):
 
                 # Update task_list dictionary value
                 if edit_choice.lower() == "y":
-                    task_list[edit_task]['completed'] = "Yes"
+                    task_list[edit_task]['completed'] = True
 
                 elif edit_choice.lower() == "e":
                     while True:
@@ -366,19 +306,82 @@ def display_statistics():
             print(f"{key} \t\t:\t {item}")
 
 
+# Create tasks.txt if it doesn't exist
+if not os.path.exists("tasks.txt"):
+    with open("tasks.txt", "w") as default_file:
+        pass
+
+with open("tasks.txt", 'r') as task_file:
+    task_data = task_file.read().split("\n")
+    task_data = [t for t in task_data if t != ""]
+
+
+# A couple of global variables called several times throughout code.
+border = "-"*50
+today = datetime.today()
+
+task_list = []
+for t_str in task_data:
+    curr_t = {}
+
+    # Split by semicolon and manually add each component
+    task_components = t_str.split(";")
+    curr_t['username'] = task_components[0]
+    curr_t['title'] = task_components[1]
+    curr_t['description'] = task_components[2]
+    curr_t['due_date'] = datetime.strptime(task_components[3], DATETIME_STRING_FORMAT)
+    curr_t['assigned_date'] = datetime.strptime(task_components[4], DATETIME_STRING_FORMAT)
+    curr_t['completed'] = True if task_components[5] == "Yes" else False
+
+    task_list.append(curr_t)
+
+
+#====Login Section====
+'''This code reads usernames and password from the user.txt file to 
+    allow a user to login.
+'''
+# If no user.txt file, write one with a default account
+if not os.path.exists("user.txt"):
+    with open("user.txt", "w") as default_file:
+        default_file.write("admin;password")
+
+# Read in user_data
+with open("user.txt", 'r') as user_file:
+    user_data = user_file.read().split("\n")
+
+# Convert to a dictionary
+username_password = {}
+for user in user_data:
+    username, password = user.split(';')
+    username_password[username] = password
+
+logged_in = False
+while not logged_in:
+
+    print(f"{border}\nLOGIN\n{border}")
+    curr_user = input("Username: ")
+    curr_pass = input("Password: ")
+    if curr_user not in username_password.keys():
+        print("User does not exist")
+        continue
+    elif username_password[curr_user] != curr_pass:
+        print("\nWrong password")
+        continue
+    else:
+        print("\nLogin Successful!")
+        logged_in = True
 
 while True:
-    # presenting the menu to the user and 
-    # making sure that the user input is converted to lower case.
-    print()
+    # Presenting the menu to the user and making sure that the user input is converted to lower case.
+    print(f"\n{border}")
     menu = input('''Select one of the following Options below:
-r - Registering a user
-a - Adding a task
+r  - Registering a user
+a  - Adding a task
 va - View all tasks
-vm - View my task
+vm - View my tasks
 gr - Generate reports
 ds - Display statistics
-e - Exit
+e  - Exit
 : ''').lower()
 
     if menu == 'r':
@@ -409,9 +412,13 @@ e - Exit
 
         display_statistics()
 
+    # Displays to user why they are unable to select this option if they are not admin.
+    elif menu == 'ds' and curr_user != 'admin': 
+        print("\nOption only accessable to admin! Please select another.")
+
     elif menu == 'e':
-        print('Goodbye!!!')
+        print(f'{border}\nGoodbye!!!\n{border}')
         exit()
 
     else:
-        print("You have made a wrong choice, Please Try again")
+        print("\nInvalid selection, please try again!")

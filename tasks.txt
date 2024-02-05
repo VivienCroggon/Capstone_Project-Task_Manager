@@ -5,3 +5,5 @@ viv;Add second task;adding second task to test task numbering;2024-01-21;2024-01
 luke;Add/delete task;add task to luke, then delete it to test functionality;2024-01-31;2024-01-31;No
 holly;Testing gr;adding new task to test gr func;2024-06-01;2024-02-04;No
 viv;Test view_mine func;Add a task to make sure view_mine is working ;2024-11-02;2024-02-04;No
+bonita;nap;have a nap all day;2024-03-01;2024-02-05;No
+bonita;zoomies;go mental for 5-10 minutes;2024-08-21;2024-02-05;No
