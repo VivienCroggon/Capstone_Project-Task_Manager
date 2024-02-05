@@ -339,6 +339,32 @@ def user_stats(name):
         file.write(f"Percentage of overdue uncompleted assigned tasks: {user_overdue_percentage}%\n")
 
 
+def display_statistics():
+    '''Modify the menu option that allows the admin to display statistics so that the reports 
+    generated are read from tasks.txt and user.txt and displayed on the screen in a user-friendly manner. 
+    If these text files don’t exist (because the user hasn’t selected to generate them yet), 
+    first call the code to generate the text files.'''
+
+    # The objective to display contents of tasks.py is the same as the view_all function. 
+    # If the file exists it will call view_all(), else create the text file.
+    if os.path.exists('tasks.txt'):
+        view_all()
+    else:
+        with open ('tasks.txt', 'w') as default_file:
+            pass
+    
+    # Create user.txt file if it does not already exist. 
+    # I am confused by this task objective as only an admin can access the ds option from the menu, 
+    # calling the display_statisics function. Therefore user.txt has to already exist
+    # in order for the option to be accessed and the function called.
+    if not os.path.exists("user.txt"):
+        with open("user.txt", "w") as default_file:
+            default_file.write("admin;password")
+    else:
+        print(f"{border}\nUsername \t:\t Password\n{border}")
+        for key, item in username_password.items():
+            print(f"{key} \t\t:\t {item}")
+
 
 
 while True:
@@ -380,6 +406,8 @@ e - Exit
         print(f"Number of users: \t\t {num_users}")
         print(f"Number of tasks: \t\t {num_tasks}")
         print("-----------------------------------")    
+
+        display_statistics()
 
     elif menu == 'e':
         print('Goodbye!!!')
