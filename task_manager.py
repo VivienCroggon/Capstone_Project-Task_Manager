@@ -11,7 +11,7 @@ from datetime import datetime, date
 
 DATETIME_STRING_FORMAT = "%Y-%m-%d"
 
-# =====Defining required functions=====
+#=====Defining required functions=====
 def reg_user():
     '''Add a new user to the user.txt file'''
     # - Request input of a new username
@@ -158,7 +158,7 @@ def edit_tasks(view_mine_tasks):
 
                 # Update task_list dictionary value
                 if edit_choice.lower() == "y":
-                    task_list[edit_task]['completed'] = True
+                    task_list[edit_task]['completed'] = "Yes"
 
                 elif edit_choice.lower() == "e":
                     while True:
@@ -180,21 +180,19 @@ def edit_tasks(view_mine_tasks):
 
 
 def generate_results():
+    """Process data to determine task statistics and write results to task_overview.txt"""
 
     # The total number of tasks that have been generated and tracked using the task_manager.py.
     total_tasks = len(task_list)
-    # print("Total tasks: ", total_tasks)
 
     # The total number of completed tasks.
     completed_tasks = 0
     for i in task_list:
         if i['completed'] == "Yes":
             completed_tasks += 1
-    # print("Completed tasks: ", completed_tasks)
 
     # The total number of uncompleted tasks.
     uncompleted_tasks = total_tasks - completed_tasks
-    # print("Uncompleted tasks: ", uncompleted_tasks)
 
     # The total number of tasks that haven’t been completed and that are overdue.
     overdue_tasks = 0
@@ -202,15 +200,12 @@ def generate_results():
     for i in task_list:
         if i['completed'] != "Yes" and i['due_date'] < today:
             overdue_tasks += 1
-    # print("Overdue tasks: ", overdue_tasks)
 
     # The percentage of tasks that are incomplete.
     incomplete_percentage = int((uncompleted_tasks/total_tasks)*100)
-    # print("Percentage of incomplete tasks: ", incomplete_percentage, "%")
 
     # The percentage of tasks that are overdue.
     overdue_percentage = int((overdue_tasks/total_tasks)*100)
-    # print("Percentage of overdue tasks: ", overdue_percentage, "%")
 
     # Write to text file task_overview.txt to display the results in a user friendly way.
     with open('task_overview.txt', 'w') as file:
@@ -223,12 +218,12 @@ def generate_results():
         
     # The total number of users registered with task_manager.py.
     users_registered = len(username_password)
-    # print("Number of users registered: ", users_registered)
 
     user_stats(curr_user)
 
 
 def user_stats(name):
+    """Processes data specific to user and write it to user_overview.txt"""
 
     # The total number of users registered with task_manager.py.
     users_registered = len(username_password)
@@ -236,16 +231,13 @@ def user_stats(name):
     # The total number of tasks assigned to that user.
     number_of_tasks = 0
     if name in username_password:
-        # print(task_list)
         for i in task_list:
             if i['username'] == name:
                 number_of_tasks += 1
-        # print("Number of tasks: ", number_of_tasks)
 
     # The percentage of the total number of tasks that have been assigned to that user
     total_tasks = len(task_list)
     user_task_percentage = int((number_of_tasks/total_tasks)*100)
-    # print(f"Percentage of tasks assigned to user: {user_task_percentage}%")
 
     # The percentage of the tasks assigned to that user that have been completed
     num_of_completed_tasks = 0
@@ -253,11 +245,9 @@ def user_stats(name):
             if i['username'] == name and i['completed'] is True:
                 num_of_completed_tasks += 1
     user_tasks_completed_percentage = int((num_of_completed_tasks/number_of_tasks)*100)
-    # print(f"Percentage of completed tasks assigned to user: {user_tasks_completed_percentage}%")
 
     # The percentage of the tasks assigned to that user that must still be completed
     tasks_to_complete_percentage = 100 - user_tasks_completed_percentage
-    # print(f"Percentage of tasks assigned to user to be completed: {tasks_to_complete_percentage}%")
 
     # The percentage of the tasks assigned to that user that has not yet been completed and are overdue
     user_overdue_tasks = 0
@@ -266,7 +256,6 @@ def user_stats(name):
             user_overdue_tasks += 1
 
     user_overdue_percentage = int((user_overdue_tasks/number_of_tasks)*100)
-    # print(f"Percentage of tasks assigned to user that are overdue: {user_overdue_percentage}%")
 
     # Write to text file user_overview.txt to display the results in a user friendly way.
     with open('user_overview.txt', 'w') as file:
@@ -294,9 +283,13 @@ def display_statistics():
             pass
     
     # Create user.txt file if it does not already exist. 
-    # I am confused by this task objective as only an admin can access the ds option from the menu, 
-    # calling the display_statisics function. Therefore user.txt has to already exist
-    # in order for the option to be accessed and the function called.
+    """I am confused by this task objective as only an admin can access the ds option from the menu 
+    and calling the display_statisics function. Therefore user.txt has to already exist in order for the 
+    option to be accessed and the function called.
+
+    I wonder if I am misunderstanding this task objective, and this function should actually 
+    read from task_overview.txt and user_overview.txt, not task.txt and user.txt"""
+
     if not os.path.exists("user.txt"):
         with open("user.txt", "w") as default_file:
             default_file.write("admin;password")
@@ -317,7 +310,7 @@ with open("tasks.txt", 'r') as task_file:
 
 
 # A couple of global variables called several times throughout code.
-border = "-"*50
+border = "-"*50 # To separate text and improve readability of the code. 
 today = datetime.today()
 
 task_list = []
@@ -362,10 +355,10 @@ while not logged_in:
     curr_user = input("Username: ")
     curr_pass = input("Password: ")
     if curr_user not in username_password.keys():
-        print("User does not exist")
+        print("\nUser does not exist.")
         continue
     elif username_password[curr_user] != curr_pass:
-        print("\nWrong password")
+        print("\nIncorrect password.")
         continue
     else:
         print("\nLogin Successful!")
