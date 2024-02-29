@@ -215,9 +215,6 @@ def generate_results():
         file.write(f"Overdue tasks:  {overdue_tasks}\n")
         file.write(f"Percentage of uncompleted tasks:  {incomplete_percentage}%\n")
         file.write(f"Percentage of overdue tasks:  {overdue_percentage}%\n")
-        
-    # The total number of users registered with task_manager.py.
-    users_registered = len(username_password)
 
     user_stats(curr_user)
 
