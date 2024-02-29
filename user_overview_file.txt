@@ -1,0 +1,7 @@
+Number of users registered: 5
+Username: viv
+Number of assigned tasks: 4
+Percentage of tasks assigned to user: 44%
+Percentage of completed assigned tasks: 25%
+Percentage of uncompleted assigned tasks: 75%
+Percentage of overdue uncompleted assigned tasks: 50%
