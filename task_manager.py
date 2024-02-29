@@ -258,7 +258,7 @@ def user_stats(name):
     user_overdue_percentage = int((user_overdue_tasks/number_of_tasks)*100)
 
     # Write to text file user_overview.txt to display the results in a user friendly way.
-    with open('user_overview.txt', 'w') as file:
+    with open('user_overview_file.txt', 'w') as file:
         file.write(f"Number of users registered: {users_registered}\n")
         file.write(f"Username: {name}\n")
         file.write(f"Number of assigned tasks: {number_of_tasks}\n")
